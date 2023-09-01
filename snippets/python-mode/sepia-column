@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name: Sepia Api Column
+# key: col
+# condition: (s-ends-with-p "model.py" buffer-file-name)
+# --
+= db.Column(${1:$$(if yas-moving-away-p
+                       (when (and (s-contains-p "(" yas-text) (not (s-ends-with-p ")" yas-text)))
+                         (s-append ")" yas-text))
+                       (yas-choose-value '("db.Integer" "db.SMALLINT" "db.Text" "db.String(" "db.DECIMAL(" "SepiaDate" "SepiaTime" "SepiaDateTime"))
+)}, nullable=${2:False}, default=${3:$$(let
+                                        ((yas-text (yas-field-value 1))
+                                         (nullable (equal (yas-field-value 2) "True")))
+                                        (cond
+                                          (nullable "Null")
+                                          ((or
+                                             (member yas-text '("db.SMALLINT" "db.Integer"))
+                                             (s-starts-with-p "db.DECIMAL" yas-text))
+                                            "0")
+                                          ((or
+                                             (equal yas-text "db.Text")
+                                             (s-starts-with-p "db.String" yas-text))
+                                            (make-string 2 34))
+                                          ((equal yas-text "SepiaDate")
+                                            "lambda _: SepiaDate.today()")
+                                          ((equal yas-text) "SepiaTime"
+                                            "lambda _: SepiaTime.now()")
+                                          ((equal yas-text) "SepiaDateTime"
+                                            "lambda _: SepiaDateTime.now()")
+                                          (t "")))})

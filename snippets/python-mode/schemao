@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: jsonschema object
+# key: schemao
+# --
+{
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "$1": {"type": "$2"},
+    },
+    ${3:"required": ["$1"],}
+}

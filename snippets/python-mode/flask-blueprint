@@ -1,0 +1,13 @@
+# -*- mode: snippet -*-
+# name: Flask Blueprint
+# key: bp
+# --
+
+from flask import Blueprint
+
+
+bp = Blueprint("$1", __name__, ${2:url_prefix="/$3"})
+
+@bp.route("$4")
+def $5():
+    return "Unimplemented", 504

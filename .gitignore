@@ -1,0 +1,12 @@
+# Ignore everything
+/*
+
+# Except for these files
+!README.org
+!custom-settings.el
+!early-init.el
+!init.el
+!bookmarks
+!.gitignore
+!/extensions/
+!/snippets/

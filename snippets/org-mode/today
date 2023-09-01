@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Today
+# key: today
+# --
+
+`(format-time-string "%-d.%-m.%Y")`

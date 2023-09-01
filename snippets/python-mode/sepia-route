@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: Sepia Flask Route
+# key: route
+# condition: (string-match "auditor-api/.*/routes.py\\'" buffer-file-name nil t)
+# --
+
+@bp.route("$1"${2:, methods=["$3"]})
+@requires_auth
+def $4():
+    $0
+    return "Unimplemented", 501

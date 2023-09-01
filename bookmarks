@@ -1,0 +1,28 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("SepiaWhisperFrontend"
+ (filename . "/ssh:sepia-server|docker:sepia-whisper-frontend-dev-1:~/whisper/")
+ (front-context-string . "  /docker:sepia-")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 25839 365 410911 494000))
+("SepiaWhisper"
+ (filename . "/ssh:sepia-server|docker:sepia-whisper-backend-dev-1:/usr/src/app/")
+ (front-context-string . "  /docker:sepia-")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 25839 203 300383 641000))
+("AuditorApi"
+ (filename . "/ssh:sepia-server|docker:auditor-api-dev-api-1:/usr/src/app/")
+ (front-context-string . "  /docker:audito")
+ (rear-context-string)
+ (position . 1)
+ (last-modified 25800 56299 690350 201000))
+("SepiaApi"
+ (filename . "/ssh:sepia-server|docker:sepia-api-dev-api-1:/usr/src/app/")
+ (front-context-string . "  /ssh:sepia-ser")
+ (rear-context-string)
+ (position . 1))
+)

@@ -103,6 +103,8 @@
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
 
+(defvar-local my/compile-func 'recompile "Function to run when compiling.")
+(defun my/compile () (interactive) (funcall my/compile-func))
 (leader-def
  ";" '(pp-eval-expression :wk "Eval Elisp")
  ":" '(execute-extended-command :wk "M-x")
@@ -110,7 +112,7 @@
 
  "o" '(:ignore t :wk "open")
  "c" '(:ignore t :wk "code")
- "c c" '(recompile :wk "Recompile")
+ "c c" '(my/compile :wk "Recompile")
  "c C" '(compile :wk "Compile")
 
  "f" '(:ignore t :wk "file")

@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Jsonschema Date
+# key: sp
+# --
+"$1": { "type": "string", "format": "date" },
+$0

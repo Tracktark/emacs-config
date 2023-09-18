@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Jsonschema String
+# key: sp
+# --
+"$3": { "type": "string"${1:, "maxLength": $2} },
+$0

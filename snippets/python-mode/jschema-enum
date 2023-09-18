@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Jsonschema Enum
+# key: sp
+# --
+"$2": { "enum": [$1] },
+$0

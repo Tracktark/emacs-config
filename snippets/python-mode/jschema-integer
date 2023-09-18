@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Jsonschema Integer
+# key: sp
+# --
+"$1": { "type": "integer" },
+$0

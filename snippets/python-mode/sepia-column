@@ -22,8 +22,8 @@
                                             (make-string 2 34))
                                           ((equal yas-text "SepiaDate")
                                             "lambda _: SepiaDate.today()")
-                                          ((equal yas-text) "SepiaTime"
+                                          ((equal yas-text "SepiaTime")
                                             "lambda _: SepiaTime.now()")
-                                          ((equal yas-text) "SepiaDateTime"
+                                          ((equal yas-text "SepiaDateTime")
                                             "lambda _: SepiaDateTime.now()")
                                           (t "")))})

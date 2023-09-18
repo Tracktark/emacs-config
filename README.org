@@ -639,6 +639,7 @@ Code completion framework. I don't really like automatic code completion, so I'l
 #+begin_src elisp
 (use-package parinfer-rust-mode
   :hook ((emacs-lisp-mode . parinfer-rust-mode)
+         (fennel-mode . parinfer-rust-mode)
          (parinfer-rust-mode . (lambda () (electric-pair-local-mode -1))))
   :config
   (setq parinfer-rust-troublesome-modes (delete 'electric-pair-mode parinfer-rust-troublesome-modes)))
@@ -849,6 +850,11 @@ Cython
 #+begin_src elisp
 (use-package go-mode
   :mode "\\.go\\'")
+#+end_src
+** Fennel
+#+begin_src elisp
+(use-package fennel-mode
+  :mode "\\.fnl\\'")
 #+end_src
 * Projectile
 #+begin_src elisp

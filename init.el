@@ -483,6 +483,7 @@
 
 (use-package parinfer-rust-mode
   :hook ((emacs-lisp-mode . parinfer-rust-mode)
+         (fennel-mode . parinfer-rust-mode)
          (parinfer-rust-mode . (lambda () (electric-pair-local-mode -1))))
   :config
   (setq parinfer-rust-troublesome-modes (delete 'electric-pair-mode parinfer-rust-troublesome-modes)))
@@ -644,6 +645,9 @@
 
 (use-package go-mode
   :mode "\\.go\\'")
+
+(use-package fennel-mode
+  :mode "\\.fnl\\'")
 
 (use-package projectile
   :general (leader-def

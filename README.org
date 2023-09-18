@@ -164,6 +164,10 @@ Treat capital letters as word boundaries
 #+begin_src elisp
 (global-subword-mode 1)
 #+end_src
+Calendar config
+#+begin_src elisp
+(setq calendar-week-start-day 1)
+#+end_src
 ** Compilation
 #+begin_src elisp
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
@@ -798,7 +802,7 @@ Cython
 ** Kotlin
 #+begin_src elisp
 (use-package kotlin-mode
-  :mode ".kt")
+  :mode "\\.kt\\'")
 #+end_src
 ** SonicPi
 #+begin_src elisp

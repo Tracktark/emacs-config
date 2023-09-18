@@ -100,6 +100,8 @@
 
 (global-subword-mode 1)
 
+(setq calendar-week-start-day 1)
+
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
 
@@ -605,7 +607,7 @@
   :mode "\\.\\(?:vert\\|frag\\|glsl\\|geom\\)\\'")
 
 (use-package kotlin-mode
-  :mode ".kt")
+  :mode "\\.kt\\'")
 
 (use-package sonic-pi
   :mode ("\\.spi\\'" . sonic-pi-mode)

@@ -809,7 +809,6 @@ Code completion framework. I don't really like automatic code completion, so I'l
         lsp-lens-enable nil))
 
 (use-package lsp-ui
-  :hook lsp-mode
   :config
   (setq lsp-diagnostics-attributes '()
         lsp-ui-doc-enable nil))

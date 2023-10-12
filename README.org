@@ -534,11 +534,21 @@ A wrapper around emacs' undo system with redo.
 #+end_src
 * Org
 #+begin_src elisp
+(defun rz/org-agenda-init ()
+  (setq org-agenda-window-setup 'current-window
+        org-agenda-files '("todo.org")
+        org-agenda-start-on-weekday nil
+        org-agenda-todo-ignore-scheduled 'all)
+
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-sorting-strategy (cons '(todo priority-down deadline-up) org-agenda-sorting-strategy))))
+
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
          (org-mode . my/org-center-title)
          (org-mode . my/org-hide-properties))
+         (org-after-todo-state-change . rz/archive-on-done))
   :general
   (:keymaps 'org-mode-map
    :states '(normal insert)

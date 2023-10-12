@@ -105,8 +105,8 @@
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
 
-(defvar-local my/compile-func 'recompile "Function to run when compiling.")
-(defun my/compile () (interactive) (funcall my/compile-func))
+(defvar-local rz/compile-func 'recompile "Function to run when compiling.")
+(defun rz/compile () (interactive) (funcall rz/compile-func))
 (leader-def
  ";" '(pp-eval-expression :wk "Eval Elisp")
  ":" '(execute-extended-command :wk "M-x")
@@ -114,7 +114,7 @@
 
  "o" '(:ignore t :wk "open")
  "c" '(:ignore t :wk "code")
- "c c" '(my/compile :wk "Recompile")
+ "c c" '(rz/compile :wk "Recompile")
  "c C" '(compile :wk "Compile")
 
  "f" '(:ignore t :wk "file")
@@ -124,7 +124,7 @@
             (interactive)
             (when (y-or-n-p "Are you sure you want to delete this file?")
               (delete-file buffer-file-name))) :wk "Delete file")
- "f u"  `(,(defun my/sudo-open-file ()
+ "f u"  `(,(defun rz/sudo-open-file ()
              "Opens current file with sudo"
              (interactive)
              (unless buffer-file-name
@@ -152,7 +152,7 @@
  "C--" 'text-scale-decrease)
 (general-def
  :states 'insert
- "C-<backspace>" (defun my/greedy-delete ()
+ "C-<backspace>" (defun rz/greedy-delete ()
                   (interactive)
                   (let ((beg-of-whitespace (save-excursion
                                              (skip-chars-backward " \t" (point-at-bol))
@@ -171,7 +171,7 @@
         dired-compress-file-default-suffix ".zip"
         dired-dwim-target t
         dired-auto-revert-buffer 'dired-buffer-stale-p)
-  (add-hook 'dired-mode-hook (defun my/set-dired-keys ()
+  (add-hook 'dired-mode-hook (defun rz/set-dired-keys ()
                                  (general-def
                                   :keymaps 'dired-mode-map
                                   :states 'normal
@@ -266,11 +266,11 @@
              "s" '(:ignore t :wk "search")
              "s s" '(rg-literal :wk "Literal")
              "s r" '(rg :wk "Regex")
-             "s t" '(my/rg-todo-project :wk "Find all todos")
-             "s p" '(my/rg-project :wk "Search in project"))
+             "s t" '(rz/rg-todo-project :wk "Find all todos")
+             "s p" '(rz/rg-project :wk "Search in project"))
   :init
-  (rg-define-search my/rg-todo-project :query "TODO:" :files "*" :dir project)
-  (rg-define-search my/rg-project :files "*" :dir project))
+  (rg-define-search rz/rg-todo-project :query "TODO:" :files "*" :dir project)
+  (rg-define-search rz/rg-project :files "*" :dir project))
 
 (use-package hl-todo
   :straight nil
@@ -390,8 +390,8 @@
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
-         (org-mode . my/org-center-title)
-         (org-mode . my/org-hide-properties))
+         (org-mode . rz/org-center-title)
+         (org-mode . rz/org-hide-properties)
   :general
   (:keymaps 'org-mode-map
    :states '(normal insert)
@@ -616,7 +616,7 @@
         sonic-pi-server-bin "server/bin/sonic-pi-server.rb")
   :general
   (:keymaps 'sonic-pi-mode-map
-            "C-c C-s" (defun my/sonic-pi-stop-live-loop ()
+            "C-c C-s" (defun rz/sonic-pi-stop-live-loop ()
                         (interactive)
                         (save-excursion
                           (re-search-backward "live_loop \\(:[^, ]+\\)")
@@ -683,7 +683,7 @@
   :after (perspective projectile)
   :demand t
   :config
-  (defun my/projectile-find-file ()
+  (defun rz/projectile-find-file ()
     (interactive)
     (if (projectile-project-p)
           (call-interactively 'projectile-find-file)
@@ -691,7 +691,7 @@
   :general
   (:keymaps 'projectile-command-map
    "p" '(projectile-persp-switch-project :wk "Switch project"))
-  (leader-def "SPC" '(my/projectile-find-file :wk "Find in project")))
+  (leader-def "SPC" '(rz/projectile-find-file :wk "Find in project")))
 
 (use-package magit
   :general (leader-def

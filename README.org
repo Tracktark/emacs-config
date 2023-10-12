@@ -543,6 +543,12 @@ A wrapper around emacs' undo system with redo.
   (with-eval-after-load 'org-agenda
     (setq org-agenda-sorting-strategy (cons '(todo priority-down deadline-up) org-agenda-sorting-strategy))))
 
+(defun rz/archive-on-done ()
+  (when (and (equal org-state "DONE")
+             (equal buffer-file-name (expand-file-name "~/org/todo.org"))
+             (y-or-n-p "Do you want to archive this item?"))
+    (org-archive-subtree)))
+
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)

@@ -173,6 +173,13 @@ Calendar config
 #+begin_src elisp
 (setq calendar-week-start-day 1)
 #+end_src
+Winner
+#+begin_src elisp
+(winner-mode)
+(general-def :states '(visual normal insert)
+             "<mouse-8>" 'winner-undo
+             "<mouse-9>" 'winner-redo)
+#+end_src
 ** Compilation
 #+begin_src elisp
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)

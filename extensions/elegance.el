@@ -233,6 +233,16 @@ ARGS are passed to `set-face-attribute'."
    (set-face 'org-warning                            'eleface-popout
              :foreground (if (eq elegance-current-theme 'light) "#df8e1d" "#eed49f")))
 
+
+ (with-eval-after-load 'org-agenda
+   (set-face 'org-agenda-structure 'eleface-salient
+             :weight 'bold)
+   (set-face 'org-agenda-date 'eleface-salient)
+   (set-face 'org-agenda-date-weekend 'eleface-salient :weight 'semi-bold)
+   (set-face 'org-agenda-date-today 'eleface-salient
+             :weight 'bold)
+   (set-face 'org-agenda-structure-filter 'eleface-popout))
+
  (with-eval-after-load 'doom-modeline
    (set-face 'doom-modeline-bar 'mode-line))
 

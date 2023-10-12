@@ -256,7 +256,7 @@ Winner
         dired-compress-file-default-suffix ".zip"
         dired-dwim-target t
         dired-auto-revert-buffer 'dired-buffer-stale-p)
-  (add-hook 'dired-mode-hook (defun my/set-dired-keys ()
+  (add-hook 'dired-mode-hook (defun rz/set-dired-keys ()
                                  (general-def
                                   :keymaps 'dired-mode-map
                                   :states 'normal
@@ -388,10 +388,7 @@ Winner
    "w d" '(evil-window-delete :wk "Close window")
    "w w" '(evil-window-next :wk "Next window")
    "w v" '(evil-window-vsplit :wk "VSplit window")
-   "w s" '(evil-window-split :wk "HSplit window"))
-  (general-def
-    :states '(normal visual insert)
-    "<mouse-8>" 'evil-switch-to-windows-last-buffer))
+   "w s" '(evil-window-split :wk "HSplit window")))
 #+end_src
 ** Evil Nerd Commenter
 #+begin_src elisp
@@ -552,8 +549,8 @@ A wrapper around emacs' undo system with redo.
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
-         (org-mode . my/org-center-title)
-         (org-mode . my/org-hide-properties))
+         (org-mode . rz/org-center-title)
+         (org-mode . rz/org-hide-properties)
          (org-after-todo-state-change . rz/archive-on-done))
   :general
   (leader-def

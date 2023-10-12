@@ -556,6 +556,9 @@ A wrapper around emacs' undo system with redo.
          (org-mode . my/org-hide-properties))
          (org-after-todo-state-change . rz/archive-on-done))
   :general
+  (leader-def
+    "C" '(org-capture :wk "Org Capture")
+    "a" '((lambda (&optional arg) (interactive "P")(org-agenda arg "n"))  :wk "Agenda"))
   (:keymaps 'org-mode-map
    :states '(normal insert)
    "TAB" 'org-cycle
@@ -563,7 +566,26 @@ A wrapper around emacs' undo system with redo.
   (leader-def
    :keymaps 'org-mode-map
    "n s" '(org-narrow-to-subtree :wk "Subtree"))
+  (localleader-def
+    :keymaps 'org-mode-map
+    "d" '(org-deadline :wk "Deadline")
+    "s" '(org-schedule :wk "Scheduled"))
   :config
+  (defun rz/org-get-school-todo ()
+    (interactive)
+    (goto-char (point-min))
+    (let* ((subjects '("SOJ Strojovo Orientované Jazyky"
+                       "MatA1 Matematická Analýza 1"
+                       "IV Internet Vecí"
+                       "ANJ Anglický Jazyk Bc. 1"
+                       "LogSys Logické Systémy"
+                       "CisP Číslicové Počítače"
+                       "SI Softvérové Inžinerstvo"
+                       "TechP Techniky Programovania 2"
+                       "MAS Modelovanie a Simulácia"))
+           (selected (completing-read "Subject: " subjects nil t))
+           (headline (car (split-string selected))))
+      (re-search-forward (rx bol "** " (literal headline)))))
   (setq org-startup-indented t
         org-src-preserve-indentation t
         org-hidden-keywords '(title)
@@ -572,8 +594,15 @@ A wrapper around emacs' undo system with redo.
         org-edit-src-content-indentation 0
         org-duration-format 'h:mm
         org-startup-folded 'showall
-        org-clock-mode-line-total 'today)
-  (plist-put org-format-latex-options :scale 2.2))
+        org-startup-with-latex-preview t
+        org-clock-mode-line-total 'today
+        org-archive-location ".archive/%s::datetree/"
+        org-capture-templates '(("s" "School" entry (file+function "~/org/todo.org" rz/org-get-school-todo) "* TODO %?")
+                                ("w" "Work" entry (file+headline "~/org/todo.org" "Work") "* TODO %?")))
+  (with-eval-after-load 'ol
+    (setq org-link-frame-setup (cons '(file . find-file) org-link-frame-setup)))
+  (plist-put org-format-latex-options :scale 2.2)
+  (rz/org-agenda-init))
 #+end_src
 ** Org Tempo
 #+begin_src elisp

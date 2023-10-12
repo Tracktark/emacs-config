@@ -22,7 +22,12 @@
     :prefix "SPC"
     :non-normal-prefix "M-SPC"
     :keymaps 'override
-    :states '(normal visual insert)))
+    :states '(normal visual insert emacs motion))
+  (general-create-definer localleader-def
+    :prefix ","
+    :non-normal-prefix "M-,"
+    :major-modes t
+    :states '(normal visual motion emacs insert)))
 
 (define-obsolete-variable-alias
   'native-comp-deferred-compilation-deny-list
@@ -102,6 +107,11 @@
 
 (setq calendar-week-start-day 1)
 
+(winner-mode)
+(general-def :states '(visual normal insert)
+             "<mouse-8>" 'winner-undo
+             "<mouse-9>" 'winner-redo)
+
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
 
@@ -141,7 +151,8 @@
  "n" '(:ignore t :wk "narrow")
  "n w" '(widen :wk "Widen")
  "n f" '(narrow-to-defun :wk "Function")
- "n r" '(narrow-to-region :wk "Region"))
+ "n r" '(narrow-to-region :wk "Region")
+ "t" `(,(defun rz/open-todo-file () (interactive) (find-file (expand-file-name "~/org/todo.org"))) :wk "Open Todo"))
 
 (general-def
  :keymaps 'override
@@ -182,10 +193,6 @@
 
 (use-package elegance
   :straight nil
-  :general (leader-def
-   "t" '(:ignore t :wk "theme")
-   "t d" `(,(lambda () (interactive) (elegance-set-theme 'dark)) :wk "Switch to dark theme")
-   "t l" `(,(lambda () (interactive) (elegance-set-theme 'light)) :wk "Switch to light theme"))
   :config
   (add-hook 'server-after-make-frame-hook 'elegance-refresh))
 
@@ -295,10 +302,7 @@
    "w d" '(evil-window-delete :wk "Close window")
    "w w" '(evil-window-next :wk "Next window")
    "w v" '(evil-window-vsplit :wk "VSplit window")
-   "w s" '(evil-window-split :wk "HSplit window"))
-  (general-def
-    :states '(normal visual insert)
-    "<mouse-8>" 'evil-switch-to-windows-last-buffer))
+   "w s" '(evil-window-split :wk "HSplit window")))
 
 (use-package evil-nerd-commenter
   :general (:states '(normal visual)
@@ -387,12 +391,31 @@
    :states 'normal
    "q" 'quit-window))
 
+(defun rz/org-agenda-init ()
+  (setq org-agenda-window-setup 'current-window
+        org-agenda-files '("todo.org")
+        org-agenda-start-on-weekday nil
+        org-agenda-todo-ignore-scheduled 'all)
+
+  (with-eval-after-load 'org-agenda
+    (setq org-agenda-sorting-strategy (cons '(todo priority-down deadline-up) org-agenda-sorting-strategy))))
+
+(defun rz/archive-on-done ()
+  (when (and (equal org-state "DONE")
+             (equal buffer-file-name (expand-file-name "~/org/todo.org"))
+             (y-or-n-p "Do you want to archive this item?"))
+    (org-archive-subtree)))
+
 (use-package org
   :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
          (org-mode . rz/org-center-title)
          (org-mode . rz/org-hide-properties)
+         (org-after-todo-state-change . rz/archive-on-done))
   :general
+  (leader-def
+    "C" '(org-capture :wk "Org Capture")
+    "a" '((lambda (&optional arg) (interactive "P")(org-agenda arg "n"))  :wk "Agenda"))
   (:keymaps 'org-mode-map
    :states '(normal insert)
    "TAB" 'org-cycle
@@ -400,7 +423,26 @@
   (leader-def
    :keymaps 'org-mode-map
    "n s" '(org-narrow-to-subtree :wk "Subtree"))
+  (localleader-def
+    :keymaps 'org-mode-map
+    "d" '(org-deadline :wk "Deadline")
+    "s" '(org-schedule :wk "Scheduled"))
   :config
+  (defun rz/org-get-school-todo ()
+    (interactive)
+    (goto-char (point-min))
+    (let* ((subjects '("SOJ Strojovo Orientované Jazyky"
+                       "MatA1 Matematická Analýza 1"
+                       "IV Internet Vecí"
+                       "ANJ Anglický Jazyk Bc. 1"
+                       "LogSys Logické Systémy"
+                       "CisP Číslicové Počítače"
+                       "SI Softvérové Inžinerstvo"
+                       "TechP Techniky Programovania 2"
+                       "MAS Modelovanie a Simulácia"))
+           (selected (completing-read "Subject: " subjects nil t))
+           (headline (car (split-string selected))))
+      (re-search-forward (rx bol "** " (literal headline)))))
   (setq org-startup-indented t
         org-src-preserve-indentation t
         org-hidden-keywords '(title)
@@ -409,8 +451,36 @@
         org-edit-src-content-indentation 0
         org-duration-format 'h:mm
         org-startup-folded 'showall
-        org-clock-mode-line-total 'today)
-  (plist-put org-format-latex-options :scale 2.2))
+        org-startup-with-latex-preview t
+        org-clock-mode-line-total 'today
+        org-archive-location ".archive/%s::datetree/"
+        org-capture-templates '(("s" "School" entry (file+function "~/org/todo.org" rz/org-get-school-todo) "* TODO %?")
+                                ("w" "Work" entry (file+headline "~/org/todo.org" "Work") "* TODO %?")))
+  (with-eval-after-load 'ol
+    (setq org-link-frame-setup (cons '(file . find-file) org-link-frame-setup)))
+  (plist-put org-format-latex-options :scale 2.2)
+  (rz/org-agenda-init))
+
+(use-package org-dwim
+  :after org
+  :straight nil
+  :demand t
+  :config
+  (general-define-key
+    :keymaps 'org-mode-map
+    :states 'normal
+    "RET" 'rz/org-dwim-at-point))
+
+(use-package evil-org
+  :straight (:host github :repo "Somelauw/evil-org-mode")
+  :after org
+  :hook (org-mode . evil-org-mode))
+(use-package evil-org-agenda
+  :straight nil
+  :after org-agenda
+  :demand t
+  :config
+  (evil-org-agenda-set-keys))
 
 (use-package org-tempo
   :straight nil
@@ -423,6 +493,68 @@
 (use-package org-title
   :after org
   :straight nil)
+
+(use-package org-roam
+  :general
+  (leader-def
+    "r" '(:ignore t :wk "roam")
+    "r r" '(org-roam-node-find :wk "Find Note")
+    "r i" '(org-roam-node-insert :wk "Insert Link")
+    "r n" '(org-roam-capture :wk "Create Note"))
+  (localleader-def
+    :keymaps 'org-mode-map
+    "r" '(org-roam-node-insert :wk "Insert Roam Link")
+    "t" '(org-roam-tag-add :wk "Add tag"))
+  :custom
+  (org-roam-directory (file-truename (concat org-directory "/roam")))
+  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags: 25}" 'face 'org-tag)))
+  (org-roam-capture-templates '(("d" "default" plain "%?"
+                                 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title:${title}\n")
+                                 :unnarrowed t)))
+  (org-roam-db-node-include-function (lambda () (not (member "fc" (org-get-tags)))))
+  :config
+  (org-roam-db-autosync-mode)
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-side-window)
+                 (side . right)
+                 (slot . 0)
+                 (window-width . 0.33)
+                 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t))))))
+(use-package org-roam-ui
+  :after org-roam)
+
+(use-package org-fc
+  :straight (org-fc :files (:defaults "awk" "demo.org"))
+  :custom (org-fc-directories (list (concat org-directory "/")))
+  :general
+  (localleader-def
+    :keymaps 'org-mode-map
+    "f" '(:ignore t :wk "flashcard")
+    "f d" '(org-fc-type-double-init :wk "New Double")
+    "f c" '(org-fc-type-cloze-init :wk "New Cloze")
+    "f n" '(org-fc-type-normal-init :wk "New Normal"))
+  :demand t
+  :config
+  (general-define-key
+    :definer 'minor-mode
+    :keymaps 'org-fc-review-flip-mode
+    :states '(normal insert emacs)
+    "RET" 'org-fc-review-flip
+    "n" 'org-fc-review-flip
+    "s" 'org-fc-review-suspend-card
+    "q" 'org-fc-review-quit)
+  (general-define-key
+    :definer 'minor-mode
+    :keymaps 'org-fc-review-rate-mode
+    :states '(normal insert emacs)
+    "a" 'org-fc-review-rate-again
+    "h" 'org-fc-review-rate-hard
+    "g" 'org-fc-review-rate-good
+    "e" 'org-fc-review-rate-easy
+    "s" 'org-fc-review-suspend-card
+    "q" 'org-fc-review-quit))
 
 (use-package multi-vterm
   :general

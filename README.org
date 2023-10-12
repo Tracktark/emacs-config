@@ -613,6 +613,18 @@ A wrapper around emacs' undo system with redo.
     :keymaps 'org-mode-map
     :states 'normal
     "RET" 'rz/org-dwim-at-point))
+
+(use-package evil-org
+  :straight (:host github :repo "Somelauw/evil-org-mode")
+  :after org
+  :hook (org-mode . evil-org-mode))
+(use-package evil-org-agenda
+  :straight nil
+  :after org-agenda
+  :demand t
+  :config
+  (evil-org-agenda-set-keys))
+
 #+end_src
 ** Org Tempo
 #+begin_src elisp

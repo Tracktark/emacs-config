@@ -184,7 +184,6 @@ ARGS are passed to `set-face-attribute'."
    (set-face 'org-checkbox-statistics-done            'eleface-faded)
    (set-face 'org-checkbox-statistics-todo            'eleface-faded)
    (set-face 'org-clock-overlay                       'eleface-faded)
-   (set-face 'org-code                                'eleface-faded)
    (set-face 'org-column                              'eleface-faded)
    (set-face 'org-column-title                        'eleface-faded)
    (set-face 'org-date                                'eleface-faded)

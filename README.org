@@ -644,6 +644,39 @@ A wrapper around emacs' undo system with redo.
   :after org
   :straight nil)
 #+end_src
+** Org Roam
+#+begin_src elisp
+(use-package org-roam
+  :general
+  (leader-def
+    "r" '(:ignore t :wk "roam")
+    "r r" '(org-roam-node-find :wk "Find Note")
+    "r i" '(org-roam-node-insert :wk "Insert Link")
+    "r n" '(org-roam-capture :wk "Create Note"))
+  (localleader-def
+    :keymaps 'org-mode-map
+    "r" '(org-roam-node-insert :wk "Insert Roam Link")
+    "t" '(org-roam-tag-add :wk "Add tag"))
+  :custom
+  (org-roam-directory (file-truename (concat org-directory "/roam")))
+  (org-roam-node-display-template (concat "${title:*} " (propertize "${tags: 25}" 'face 'org-tag)))
+  (org-roam-capture-templates '(("d" "default" plain "%?"
+                                 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title:${title}\n")
+                                 :unnarrowed t)))
+  (org-roam-db-node-include-function (lambda () (not (member "fc" (org-get-tags)))))
+  :config
+  (org-roam-db-autosync-mode)
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-side-window)
+                 (side . right)
+                 (slot . 0)
+                 (window-width . 0.33)
+                 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t))))))
+(use-package org-roam-ui
+  :after org-roam)
+#+end_src
 * Vterm
 #+begin_src elisp
 (use-package multi-vterm

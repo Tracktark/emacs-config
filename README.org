@@ -39,7 +39,12 @@ General is a package, which allows more convenient key definitions. It also inte
     :prefix "SPC"
     :non-normal-prefix "M-SPC"
     :keymaps 'override
-    :states '(normal visual insert)))
+    :states '(normal visual insert emacs motion))
+  (general-create-definer localleader-def
+    :prefix ","
+    :non-normal-prefix "M-,"
+    :major-modes t
+    :states '(normal visual motion emacs insert)))
 #+end_src
 * Emacs
 ** Preferences

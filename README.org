@@ -269,10 +269,6 @@ Winner
 #+begin_src elisp
 (use-package elegance
   :straight nil
-  :general (leader-def
-   "t" '(:ignore t :wk "theme")
-   "t d" `(,(lambda () (interactive) (elegance-set-theme 'dark)) :wk "Switch to dark theme")
-   "t l" `(,(lambda () (interactive) (elegance-set-theme 'light)) :wk "Switch to light theme"))
   :config
   (add-hook 'server-after-make-frame-hook 'elegance-refresh))
 #+end_src

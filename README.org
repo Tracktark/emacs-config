@@ -223,7 +223,8 @@ Winner
  "n" '(:ignore t :wk "narrow")
  "n w" '(widen :wk "Widen")
  "n f" '(narrow-to-defun :wk "Function")
- "n r" '(narrow-to-region :wk "Region"))
+ "n r" '(narrow-to-region :wk "Region")
+ "t" `(,(defun rz/open-todo-file () (interactive) (find-file (expand-file-name "~/org/todo.org"))) :wk "Open Todo"))
 
 (general-def
  :keymaps 'override

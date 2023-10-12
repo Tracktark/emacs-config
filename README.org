@@ -603,6 +603,16 @@ A wrapper around emacs' undo system with redo.
     (setq org-link-frame-setup (cons '(file . find-file) org-link-frame-setup)))
   (plist-put org-format-latex-options :scale 2.2)
   (rz/org-agenda-init))
+
+(use-package org-dwim
+  :after org
+  :straight nil
+  :demand t
+  :config
+  (general-define-key
+    :keymaps 'org-mode-map
+    :states 'normal
+    "RET" 'rz/org-dwim-at-point))
 #+end_src
 ** Org Tempo
 #+begin_src elisp

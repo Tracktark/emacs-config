@@ -60,14 +60,16 @@
   "Used for region and selections."
   :group 'eleface)
 
-(defun set-face (face style)
-  "Reset FACE and make it inherit STYLE."
-  (set-face-attribute face nil
+(defun set-face (face style &rest args)
+  "Reset FACE and make it inherit STYLE.
+ARGS are passed to `set-face-attribute'."
+  (apply 'set-face-attribute face nil
                       :foreground 'unspecified :background 'unspecified
                       :family     'unspecified :slant      'unspecified
                       :weight     'unspecified :height     'unspecified
                       :underline  'unspecified :overline   'unspecified
-                      :box        'unspecified :inherit    style))
+                      :box        'unspecified :inherit    style
+                      args))
 
 (defun elegance-refresh ()
  (set-frame-font (format "%s %d" eleface-font-family eleface-font-size))
@@ -106,13 +108,11 @@
  (set-face 'region 'eleface-subtle)
  (set-face 'highlight 'eleface-subtle)
  (set-face 'secondary-selection 'eleface-subtle)
- (set-face 'cursor 'eleface-default)
- (set-face-attribute 'cursor nil
-                     :background (face-foreground 'eleface-default))
+ (set-face 'cursor 'eleface-default
+           :background (face-foreground 'eleface-default))
 
- (set-face 'variable-pitch 'eleface-default)
- (set-face-attribute 'variable-pitch nil
-                     :family eleface-font-family-prop)
+ (set-face 'variable-pitch 'eleface-default
+           :family eleface-font-family-prop)
 
  (set-face-attribute 'warning nil :foreground (if (eq elegance-current-theme 'light) "#df8e1d" "#eed49f"))
  (set-face-attribute 'error nil :foreground (if (eq elegance-current-theme 'light) "#d20f39" "#ed8796"))
@@ -131,8 +131,8 @@
  (set-face 'font-lock-constant-face 'eleface-salient)
  (set-face 'font-lock-warning-face 'eleface-popout)
  (set-face 'font-lock-function-name-face 'eleface-strong)
- (set-face 'font-lock-variable-name-face 'eleface-strong)
- (set-face-attribute 'font-lock-variable-name-face nil :weight 'semi-bold)
+ (set-face 'font-lock-variable-name-face 'eleface-strong
+           :weight 'semi-bold)
  (set-face 'font-lock-builtin-face 'eleface-salient)
  (set-face 'font-lock-type-face 'eleface-salient)
  (set-face 'font-lock-keyword-face 'eleface-salient)
@@ -174,12 +174,12 @@
 ; Org
  (with-eval-after-load 'org
    (set-face 'org-archived                            'eleface-faded)
-   (set-face 'org-block                             'eleface-default)
-   (set-face 'org-block-begin-line                    'eleface-faded)
-   (set-face 'org-block-end-line                      'eleface-faded)
-   (set-face-attribute 'org-block nil                      :extend t)
-   (set-face-attribute 'org-block-begin-line nil           :extend t)
-   (set-face-attribute 'org-block-end-line nil             :extend t)
+   (set-face 'org-block                             'eleface-default
+             :extend t)
+   (set-face 'org-block-begin-line                    'eleface-faded
+             :extend t)
+   (set-face 'org-block-end-line                      'eleface-faded
+             :extend t)
    (set-face 'org-checkbox                            'eleface-faded)
    (set-face 'org-checkbox-statistics-done            'eleface-faded)
    (set-face 'org-checkbox-statistics-todo            'eleface-faded)
@@ -192,9 +192,8 @@
    (set-face 'org-default                             'eleface-faded)
    (set-face 'org-document-info                       'eleface-faded)
    (set-face 'org-document-info-keyword               'eleface-faded)
-   (set-face 'org-document-title                      'eleface-strong)
-   (set-face-attribute 'org-document-title nil
-                       :height 1.5)
+   (set-face 'org-document-title                      'eleface-strong
+             :height 1.5)
    (set-face 'org-done                              'eleface-default)
    (set-face 'org-drawer                              'eleface-faded)
    (set-face 'org-ellipsis                            'eleface-faded)
@@ -204,13 +203,12 @@
    (set-face 'org-latex-and-related                   'eleface-faded)
 
    (dolist (f '(org-level-1 org-level-2 org-level-3 org-level-4 org-level-5 org-level-6 org-level-7 org-level-8))
-     (set-face f 'eleface-strong)
-     (set-face-attribute f nil
-                         :height 1.1))
+     (set-face f 'eleface-strong :height 1.1))
     
-   (set-face 'org-link                              'eleface-salient)
-   (set-face 'org-list-dt                             'eleface-strong)
-   (set-face-attribute 'org-list-dt nil :weight 'semi-bold)
+   (set-face 'org-link                              'eleface-salient
+             :underline t)
+   (set-face 'org-list-dt                             'eleface-strong
+             :weight 'semi-bold)
    (set-face 'org-macro                               'eleface-faded)
    (set-face 'org-meta-line                           'eleface-faded)
    (set-face 'org-mode-line-clock                     'eleface-faded)
@@ -218,9 +216,9 @@
    (set-face 'org-priority                            'eleface-faded)
    (set-face 'org-property-value                      'eleface-faded)
    (set-face 'org-quote                               'eleface-faded)
-   (set-face 'org-scheduled                           'eleface-faded)
-   (set-face 'org-scheduled-previously                'eleface-faded)
-   (set-face 'org-scheduled-today                     'eleface-faded)
+   (set-face 'org-scheduled                           'eleface-default)
+   (set-face 'org-scheduled-previously                'org-warning)
+   (set-face 'org-scheduled-today                     'eleface-default)
    (set-face 'org-sexp-date                           'eleface-faded)
    (set-face 'org-special-keyword                     'eleface-faded)
    (set-face 'org-table                               'eleface-faded)
@@ -232,7 +230,8 @@
    (set-face 'org-upcoming-deadline                 'eleface-default)
    (set-face 'org-verbatim                           'eleface-popout)
    (set-face 'org-verse                               'eleface-faded)
-   (set-face 'org-warning                            'eleface-popout))
+   (set-face 'org-warning                            'eleface-popout
+             :foreground (if (eq elegance-current-theme 'light) "#df8e1d" "#eed49f")))
 
  (with-eval-after-load 'doom-modeline
    (set-face 'doom-modeline-bar 'mode-line))

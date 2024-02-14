@@ -1060,6 +1060,11 @@ Cython
 (use-package mermaid-mode
   :mode "\\.mmd\\'")
 #+end_src
+** PDF
+#+begin_src elisp
+(use-package pdf-tools
+  :mode ("\\.pdf\\'" . pdf-view-mode))
+#+end_src
 * Projectile
 #+begin_src elisp
 (use-package projectile

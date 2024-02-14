@@ -192,6 +192,18 @@ Winner
     (pop-to-buffer buffer)))
 (add-hook 'compilation-finish-functions 'rz/open-compilation-if-failed)
 #+end_src
+** Recentf
+#+begin_src elisp
+(use-package recentf
+  :straight nil
+  :demand t
+  :general
+  (leader-def
+    "f r" '(recentf :wk "Open recent file"))
+  :config
+  (recentf-mode)
+  (run-at-time nil (* 5 60) 'recentf-save-list))
+#+end_src
 ** Emacs Keybinds
 #+begin_src elisp
 (defvar-local rz/compile-func 'recompile "Function to run when compiling.")

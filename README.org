@@ -714,8 +714,19 @@ A wrapper around emacs' undo system with redo.
 (use-package org-anki
   :commands (org-anki-sync-entry))
 #+end_src
+** Org Mermaid
+#+begin_src elisp
+(use-package ob-mermaid
+  :after org
   :demand t
   :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (cons '(mermaid . t) org-babel-load-languages))
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+  (setq org-confirm-babel-evaluate nil)
+  (add-to-list 'org-babel-default-header-args:mermaid '(:background-color . "transparent --scale 2")))
+#+end_src
 #+end_src
 * Vterm
 #+begin_src elisp

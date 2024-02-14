@@ -118,7 +118,8 @@ Nano emacs
 (setq inhibit-startup-message t
       inhibit-startup-screen t
       inhibit-startup-echo-area-message t
-      initial-scratch-message nil)
+      initial-scratch-message nil
+      initial-major-mode 'text-mode)
 (setq default-frame-alist
       '((vertical-scroll-bars . nil)
         (internal-border-width . 40)

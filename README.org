@@ -1065,6 +1065,11 @@ Cython
 (use-package pdf-tools
   :mode ("\\.pdf\\'" . pdf-view-mode))
 #+end_src
+** Erlang
+#+begin_src elisp
+(use-package erlang
+  :mode ("\\.erl\\'" . erlang-mode))
+#+end_src
 * Projectile
 #+begin_src elisp
 (use-package projectile

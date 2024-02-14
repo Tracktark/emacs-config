@@ -735,20 +735,9 @@ A wrapper around emacs' undo system with redo.
   :config
   (setq org-reveal-root "file:///usr/local/src/reveal.js"))
 #+end_src
-* Vterm
 #+begin_src elisp
-(use-package multi-vterm
   :general
-  (leader-def "o t" '(multi-vterm-dedicated-toggle :wk "Toggle terminal"))
-  (:keymaps 'vterm-mode-map
-   :states 'insert
-   "C-<right>" 'multi-vterm-next
-   "C-<left>" 'multi-vterm-prev
-   "C-d" 'vterm--self-insert)
   :config
-  (evil-set-initial-state 'vterm-mode 'insert)
-  (setq multi-vterm-dedicated-window-height-percent 30)
-  (use-package vterm))
 
 #+end_src
 * Flycheck

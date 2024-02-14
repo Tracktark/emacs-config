@@ -146,8 +146,10 @@ Enable disabled commands
 #+end_src
 TRAMP
 #+begin_src elisp
-(setq tramp-default-method "ssh")
-(with-eval-after-load 'tramp
+(use-package tramp
+  :init
+  (setq tramp-default-method "ssh")
+  :config
   (add-to-list 'tramp-connection-properties
                '(".*docker:.*" "remote-shell" "/bin/bash"))
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))

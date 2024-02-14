@@ -76,8 +76,7 @@ ARGS are passed to `set-face-attribute'."
  (set-face-attribute 'eleface-default nil
                      :foreground eleface-foreground-color
                      :background eleface-background-color
-                     :family eleface-font-family
-                     :height (* eleface-font-size 10))
+                     :family eleface-font-family)
 
  (set-face-attribute 'eleface-strong nil
                      :foreground (face-foreground 'eleface-default)
@@ -98,10 +97,11 @@ ARGS are passed to `set-face-attribute'."
  (set-face-attribute 'eleface-subtle nil
                      :background eleface-subtle-color)
 
+
  (set-foreground-color (face-foreground 'eleface-default))
  (set-background-color (face-background 'eleface-default))
 
- (set-face 'default 'eleface-default)
+ (set-face-attribute 'default nil :height (* eleface-font-size 10))
  (set-face 'bold 'eleface-strong)
  (set-face 'italic 'eleface-faded)
  (set-face 'bold-italic 'eleface-strong)
@@ -220,7 +220,7 @@ ARGS are passed to `set-face-attribute'."
    (set-face 'org-scheduled-today                     'eleface-default)
    (set-face 'org-sexp-date                           'eleface-faded)
    (set-face 'org-special-keyword                     'eleface-faded)
-   (set-face 'org-table                               'eleface-faded)
+   (set-face 'org-table                               'eleface-default)
    (set-face 'org-tag                                'eleface-popout)
    (set-face 'org-tag-group                           'eleface-faded)
    (set-face 'org-target                              'eleface-faded)
@@ -228,6 +228,7 @@ ARGS are passed to `set-face-attribute'."
    (set-face 'org-todo                              'eleface-salient)
    (set-face 'org-upcoming-deadline                 'eleface-default)
    (set-face 'org-verbatim                           'eleface-popout)
+   (set-face 'org-code                               'eleface-popout)
    (set-face 'org-verse                               'eleface-faded)
    (set-face 'org-warning                            'eleface-popout
              :foreground (if (eq elegance-current-theme 'light) "#df8e1d" "#eed49f")))
@@ -260,19 +261,12 @@ ARGS are passed to `set-face-attribute'."
    (set-face 'tree-sitter-hl-face:number 'eleface-default)
    (set-face 'tree-sitter-hl-face:type.builtin 'eleface-salient)
    (set-face 'tree-sitter-hl-face:type 'eleface-salient)))
-  
 
 
 (defun elegance-set-theme (theme)
   "Set a theme to THEME."
   (interactive (list (intern (completing-read "Theme: " '(light dark)))))
   (cond ((eq theme 'light)
-         ;; (setq eleface-foreground-color "#000000")
-         ;; (setq eleface-background-color "#ffffff")
-         ;; (setq eleface-popout-color     "#ffab91")
-         ;; (setq eleface-salient-color    "#673ab7")
-         ;; (setq eleface-faded-color      "#b0bec5")
-         ;; (setq eleface-subtle-color     "#eceff1"))
          (setq eleface-foreground-color "#4c4f69")
          (setq eleface-background-color "#eff1f5")
          (setq eleface-popout-color     "#40a02b")

@@ -701,7 +701,7 @@ A wrapper around emacs' undo system with redo.
   (org-roam-directory (file-truename (concat org-directory "/roam")))
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags: 25}" 'face 'org-tag)))
   (org-roam-capture-templates '(("d" "default" plain "%?"
-                                 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title:${title}\n")
+                                 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title:${title}\n%(save-current-buffer (find-file \"%f\") (if (not org-file-tags) \"\" (concat \"#+filetags: :\" (mapconcat 'substring-no-properties org-file-tags \":\") \":\")))\n")
                                  :unnarrowed t)))
   (org-roam-db-node-include-function (lambda () (not (member "fc" (org-get-tags)))))
   :config

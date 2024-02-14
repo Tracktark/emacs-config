@@ -185,6 +185,14 @@ Winner
 #+begin_src elisp
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
+(add-to-list 'display-buffer-alist
+             '((major-mode . compilation-mode) (display-buffer-no-window)))
+(defun rz/open-compilation-if-failed (buffer string)
+  "Display a compilation buffer if compilation didn't succeed."
+  (when (or (> compilation-num-errors-found 0)
+            (> compilation-num-warnings-found 0))
+    (pop-to-buffer buffer)))
+(add-hook 'compilation-finish-functions 'rz/open-compilation-if-failed)
 #+end_src
 ** Emacs Keybinds
 #+begin_src elisp

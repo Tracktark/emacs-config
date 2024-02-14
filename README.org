@@ -1042,6 +1042,18 @@ Cython
 (use-package lsp-java
   :demand t
   :hook (java-mode . lsp-deferred))
+(use-package uva
+  :straight nil
+  :commands (uva-find-pdf)
+  :general
+  (leader-def
+    "u" '(:ignore t :wk "uva")
+    "u p" '(uva-find-pdf :wk "Go to pdf")
+    "u s" '(uva-find-solution :wk "Go to solution")
+    "u r" '(uva-run :wk "Run")
+    "u R" '(uva-run-interactive :wk "Run interactively"))
+  :config
+  (setq doc-view-continuous t))
 #+end_src
 * Projectile
 #+begin_src elisp

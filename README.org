@@ -785,10 +785,6 @@ Code completion framework. I don't really like automatic code completion, so I'l
   (setq company-idle-delay nil)
   (global-company-mode))
 #+end_src
-* Docker TRAMP
-#+begin_src elisp
-(use-package docker-tramp)
-#+end_src
 * Tree Sitter
 #+begin_src elisp
 (use-package tree-sitter

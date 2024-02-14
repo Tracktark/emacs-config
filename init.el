@@ -62,8 +62,6 @@
 
 (blink-cursor-mode 0)
 
-(set-face-attribute 'default nil :font "FiraCode Nerd Font" :height 140 :weight 'normal)
-
 (savehist-mode 1)
 
 (setq-default indent-tabs-mode nil)
@@ -72,7 +70,8 @@
 (setq inhibit-startup-message t
       inhibit-startup-screen t
       inhibit-startup-echo-area-message t
-      initial-scratch-message nil)
+      initial-scratch-message nil
+      initial-major-mode 'text-mode)
 (setq default-frame-alist
       '((vertical-scroll-bars . nil)
         (internal-border-width . 40)
@@ -89,8 +88,10 @@
 
 (put 'narrow-to-region 'disabled nil)
 
-(setq tramp-default-method "ssh")
-(with-eval-after-load 'tramp
+(use-package tramp
+  :init
+  (setq tramp-default-method "ssh")
+  :config
   (add-to-list 'tramp-connection-properties
                '(".*docker:.*" "remote-shell" "/bin/bash"))
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
@@ -112,8 +113,31 @@
              "<mouse-8>" 'winner-undo
              "<mouse-9>" 'winner-redo)
 
+(add-to-list 'display-buffer-alist
+             '("\\*eshell\\*" . (display-buffer-at-bottom)))
+
+(setq display-buffer-base-action '(display-buffer-same-window))
+
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
+(add-to-list 'display-buffer-alist
+             '((major-mode . compilation-mode) (display-buffer-no-window)))
+(defun rz/open-compilation-if-failed (buffer string)
+  "Display a compilation buffer if compilation didn't succeed."
+  (when (or (> compilation-num-errors-found 0)
+            (> compilation-num-warnings-found 0))
+    (pop-to-buffer buffer)))
+(add-hook 'compilation-finish-functions 'rz/open-compilation-if-failed)
+
+(use-package recentf
+  :straight nil
+  :demand t
+  :general
+  (leader-def
+    "f r" '(recentf :wk "Open recent file"))
+  :config
+  (recentf-mode)
+  (run-at-time nil (* 5 60) 'recentf-save-list))
 
 (defvar-local rz/compile-func 'recompile "Function to run when compiling.")
 (defun rz/compile () (interactive) (funcall rz/compile-func))
@@ -123,6 +147,8 @@
  "<return>" '(bookmark-jump :wk "Jump to Bookmark")
 
  "o" '(:ignore t :wk "open")
+ "o t" '(eshell :wk "Open eshell")
+
  "c" '(:ignore t :wk "code")
  "c c" '(rz/compile :wk "Recompile")
  "c C" '(compile :wk "Compile")
@@ -394,8 +420,9 @@
 (defun rz/org-agenda-init ()
   (setq org-agenda-window-setup 'current-window
         org-agenda-files '("todo.org")
-        org-agenda-start-on-weekday nil
+        org-agenda-start-on-weekday 1
         org-agenda-todo-ignore-scheduled 'all)
+  (add-hook 'server-after-make-frame-hook 'rz/agenda)
 
   (with-eval-after-load 'org-agenda
     (setq org-agenda-sorting-strategy (cons '(todo priority-down deadline-up) org-agenda-sorting-strategy))))
@@ -415,10 +442,14 @@
   :general
   (leader-def
     "C" '(org-capture :wk "Org Capture")
-    "a" '((lambda (&optional arg) (interactive "P")(org-agenda arg "n"))  :wk "Agenda"))
+    "a" `(,(defun rz/agenda (&optional arg) (interactive "P")(org-agenda arg "n"))  :wk "Agenda"))
   (:keymaps 'org-mode-map
-   :states '(normal insert)
+   :states 'normal
    "TAB" 'org-cycle
+   "M-<return>" 'org-meta-return)
+  (:keymaps 'org-mode-map
+   :states 'insert
+   "$" 'rz/org-auto-latex
    "M-<return>" 'org-meta-return)
   (leader-def
    :keymaps 'org-mode-map
@@ -426,8 +457,14 @@
   (localleader-def
     :keymaps 'org-mode-map
     "d" '(org-deadline :wk "Deadline")
-    "s" '(org-schedule :wk "Scheduled"))
+    "s" '(org-schedule :wk "Scheduled")
+    "p" '(org-priority :wk "Priority")
+    "e" '(org-export-dispatch :wk "Export"))
   :config
+  (defun rz/org-auto-latex ()
+    (interactive)
+    (org-self-insert-command 1)
+    (org-latex-preview))
   (defun rz/org-get-school-todo ()
     (interactive)
     (goto-char (point-min))
@@ -452,6 +489,8 @@
         org-duration-format 'h:mm
         org-startup-folded 'showall
         org-startup-with-latex-preview t
+        org-startup-with-inline-images t
+        org-image-max-width 500
         org-clock-mode-line-total 'today
         org-archive-location ".archive/%s::datetree/"
         org-capture-templates '(("s" "School" entry (file+function "~/org/todo.org" rz/org-get-school-todo) "* TODO %?")
@@ -509,65 +548,55 @@
   (org-roam-directory (file-truename (concat org-directory "/roam")))
   (org-roam-node-display-template (concat "${title:*} " (propertize "${tags: 25}" 'face 'org-tag)))
   (org-roam-capture-templates '(("d" "default" plain "%?"
-                                 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title:${title}\n")
+                                 :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org" "#+title:${title}\n%(save-current-buffer (find-file \"%f\") (if (not org-file-tags) \"\" (concat \"#+filetags: :\" (mapconcat 'substring-no-properties org-file-tags \":\") \":\")))\n")
                                  :unnarrowed t)))
   (org-roam-db-node-include-function (lambda () (not (member "fc" (org-get-tags)))))
   :config
-  (org-roam-db-autosync-mode)
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-side-window)
-                 (side . right)
-                 (slot . 0)
-                 (window-width . 0.33)
-                 (window-parameters . ((no-other-window . t)
-                                       (no-delete-other-windows . t))))))
+  (org-roam-db-autosync-mode))
 (use-package org-roam-ui
   :after org-roam)
 
-(use-package org-fc
-  :straight (org-fc :files (:defaults "awk" "demo.org"))
-  :custom (org-fc-directories (list (concat org-directory "/")))
-  :general
-  (localleader-def
-    :keymaps 'org-mode-map
-    "f" '(:ignore t :wk "flashcard")
-    "f d" '(org-fc-type-double-init :wk "New Double")
-    "f c" '(org-fc-type-cloze-init :wk "New Cloze")
-    "f n" '(org-fc-type-normal-init :wk "New Normal"))
+(use-package org-anki
+  :commands (org-anki-sync-entry))
+
+(use-package ob-mermaid
+  :after org
   :demand t
   :config
-  (general-define-key
-    :definer 'minor-mode
-    :keymaps 'org-fc-review-flip-mode
-    :states '(normal insert emacs)
-    "RET" 'org-fc-review-flip
-    "n" 'org-fc-review-flip
-    "s" 'org-fc-review-suspend-card
-    "q" 'org-fc-review-quit)
-  (general-define-key
-    :definer 'minor-mode
-    :keymaps 'org-fc-review-rate-mode
-    :states '(normal insert emacs)
-    "a" 'org-fc-review-rate-again
-    "h" 'org-fc-review-rate-hard
-    "g" 'org-fc-review-rate-good
-    "e" 'org-fc-review-rate-easy
-    "s" 'org-fc-review-suspend-card
-    "q" 'org-fc-review-quit))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (cons '(mermaid . t) org-babel-load-languages))
+  (add-hook 'org-babel-after-execute-hook 'org-redisplay-inline-images)
+  (setq org-confirm-babel-evaluate nil)
+  (add-to-list 'org-babel-default-header-args:mermaid '(:background-color . "transparent --scale 2")))
 
-(use-package multi-vterm
-  :general
-  (leader-def "o t" '(multi-vterm-dedicated-toggle :wk "Toggle terminal"))
-  (:keymaps 'vterm-mode-map
-   :states 'insert
-   "C-<right>" 'multi-vterm-next
-   "C-<left>" 'multi-vterm-prev
-   "C-d" 'vterm--self-insert)
+(use-package ox-reveal
+  :demand t
+  :after org
   :config
-  (evil-set-initial-state 'vterm-mode 'insert)
-  (setq multi-vterm-dedicated-window-height-percent 30)
-  (use-package vterm))
+  (setq org-reveal-root "file:///usr/local/src/reveal.js"))
+
+(use-package popper
+  :demand t
+  :general
+  (leader-def
+    "k" '(popper-toggle :wk "Toggle popup")
+    "K" '(popper-cycle :wk "Cycle popups"))
+  :config
+  (setq popper-reference-buffers '(compilation-mode
+                                   helpful-mode
+                                   eshell-mode
+                                   vterm-mode
+                                   inferior-python-mode
+                                   "\\*Python\\*"
+                                   "\\*vterminal"
+                                   "\\*org-roam\\*"
+                                   "\\*rg\\*")
+
+        popper-group-function 'popper-group-by-perspective
+        popper-mode-line nil)
+  (popper-mode 1)
+  (popper-echo-mode 1))
 
 (use-package flycheck
   :demand t
@@ -589,8 +618,6 @@
   :init
   (setq company-idle-delay nil)
   (global-company-mode))
-
-(use-package docker-tramp)
 
 (use-package tree-sitter
   :config
@@ -639,7 +666,6 @@
         lsp-lens-enable nil))
 
 (use-package lsp-ui
-  :hook lsp-mode
   :config
   (setq lsp-diagnostics-attributes '()
         lsp-ui-doc-enable nil))
@@ -658,7 +684,11 @@
   :hook (python-mode . lsp-deferred)
   :straight nil
   :mode ("\\.py\\'" . python-mode)
-  :interpreter ("python" . python-mode))
+  :interpreter ("python" . python-mode)
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (cons '(python . t) org-babel-load-languages)))
 
 (use-package lsp-pyright
   :after python
@@ -683,9 +713,12 @@
 (use-package cython-mode
   :mode "\\.pyx\\'")
 
-(setq c-basic-offset 4)
-(add-hook 'c-mode-hook 'lsp-deferred)
-(add-hook 'c++-mode-hook 'lsp-deferred)
+(defun rz/setup-c-mode ()
+  (lsp-deferred)
+  (c-set-offset 'innamespace 0)
+  (setq c-basic-offset 4))
+(add-hook 'c-mode-hook 'rz/setup-c-mode)
+(add-hook 'c++-mode-hook 'rz/setup-c-mode)
 
 (use-package rust-mode
   :mode "\\.rs\\'"
@@ -783,6 +816,31 @@
 (use-package fennel-mode
   :mode "\\.fnl\\'")
 
+(use-package lsp-java
+  :demand t
+  :hook (java-mode . lsp-deferred))
+(use-package uva
+  :straight nil
+  :commands (uva-find-pdf)
+  :general
+  (leader-def
+    "u" '(:ignore t :wk "uva")
+    "u p" '(uva-find-pdf :wk "Go to pdf")
+    "u s" '(uva-find-solution :wk "Go to solution")
+    "u r" '(uva-run :wk "Run")
+    "u R" '(uva-run-interactive :wk "Run interactively"))
+  :config
+  (setq doc-view-continuous t))
+
+(use-package mermaid-mode
+  :mode "\\.mmd\\'")
+
+(use-package pdf-tools
+  :mode ("\\.pdf\\'" . pdf-view-mode))
+
+(use-package erlang
+  :mode ("\\.erl\\'" . erlang-mode))
+
 (use-package projectile
   :general (leader-def
    "p" '(:keymap projectile-command-map :wk "project"))
@@ -826,10 +884,12 @@
   (leader-def "SPC" '(rz/projectile-find-file :wk "Find in project")))
 
 (use-package magit
-  :general (leader-def
-    "g" '(magit-status :wk "Magit"))
+  :general
+  (leader-def
+   "g" '(magit-status :wk "Magit"))
   :config
-  (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1))
+  (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
+  (add-to-list 'display-buffer-alist '("magit-diff" . (display-buffer-at-bottom))))
 
 (use-package yasnippet
   :init

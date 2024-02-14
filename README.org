@@ -1055,6 +1055,11 @@ Cython
   :config
   (setq doc-view-continuous t))
 #+end_src
+** Mermaid
+#+begin_src elisp
+(use-package mermaid-mode
+  :mode "\\.mmd\\'")
+#+end_src
 * Projectile
 #+begin_src elisp
 (use-package projectile

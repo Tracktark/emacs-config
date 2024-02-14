@@ -727,6 +727,13 @@ A wrapper around emacs' undo system with redo.
   (setq org-confirm-babel-evaluate nil)
   (add-to-list 'org-babel-default-header-args:mermaid '(:background-color . "transparent --scale 2")))
 #+end_src
+** Org Reveal
+#+begin_src elisp
+(use-package ox-reveal
+  :demand t
+  :after org
+  :config
+  (setq org-reveal-root "file:///usr/local/src/reveal.js"))
 #+end_src
 * Vterm
 #+begin_src elisp

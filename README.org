@@ -863,7 +863,11 @@ Code completion framework. I don't really like automatic code completion, so I'l
   :hook (python-mode . lsp-deferred)
   :straight nil
   :mode ("\\.py\\'" . python-mode)
-  :interpreter ("python" . python-mode))
+  :interpreter ("python" . python-mode)
+  :config
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   (cons '(python . t) org-babel-load-languages)))
 #+end_src
 Pyright
 #+begin_src elisp

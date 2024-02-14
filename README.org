@@ -179,6 +179,15 @@ Winner
              "<mouse-8>" 'winner-undo
              "<mouse-9>" 'winner-redo)
 #+end_src
+Eshell
+#+begin_src elisp
+(add-to-list 'display-buffer-alist
+             '("\\*eshell\\*" . (display-buffer-at-bottom)))
+#+end_src
+Display buffer base
+#+begin_src elisp
+(setq display-buffer-base-action '(display-buffer-same-window))
+#+end_src
 ** Compilation
 #+begin_src elisp
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
@@ -214,6 +223,8 @@ Winner
  "<return>" '(bookmark-jump :wk "Jump to Bookmark")
 
  "o" '(:ignore t :wk "open")
+ "o t" '(eshell :wk "Open eshell")
+
  "c" '(:ignore t :wk "code")
  "c c" '(rz/compile :wk "Recompile")
  "c C" '(compile :wk "Compile")

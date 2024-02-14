@@ -709,38 +709,9 @@ A wrapper around emacs' undo system with redo.
 (use-package org-roam-ui
   :after org-roam)
 #+end_src
-** Org Fc
 #+begin_src elisp
-(use-package org-fc
-  :straight (org-fc :files (:defaults "awk" "demo.org"))
-  :custom (org-fc-directories (list (concat org-directory "/")))
-  :general
-  (localleader-def
-    :keymaps 'org-mode-map
-    "f" '(:ignore t :wk "flashcard")
-    "f d" '(org-fc-type-double-init :wk "New Double")
-    "f c" '(org-fc-type-cloze-init :wk "New Cloze")
-    "f n" '(org-fc-type-normal-init :wk "New Normal"))
   :demand t
   :config
-  (general-define-key
-    :definer 'minor-mode
-    :keymaps 'org-fc-review-flip-mode
-    :states '(normal insert emacs)
-    "RET" 'org-fc-review-flip
-    "n" 'org-fc-review-flip
-    "s" 'org-fc-review-suspend-card
-    "q" 'org-fc-review-quit)
-  (general-define-key
-    :definer 'minor-mode
-    :keymaps 'org-fc-review-rate-mode
-    :states '(normal insert emacs)
-    "a" 'org-fc-review-rate-again
-    "h" 'org-fc-review-rate-hard
-    "g" 'org-fc-review-rate-good
-    "e" 'org-fc-review-rate-easy
-    "s" 'org-fc-review-suspend-card
-    "q" 'org-fc-review-quit))
 #+end_src
 * Vterm
 #+begin_src elisp

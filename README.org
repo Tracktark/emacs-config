@@ -564,7 +564,7 @@ A wrapper around emacs' undo system with redo.
 (defun rz/org-agenda-init ()
   (setq org-agenda-window-setup 'current-window
         org-agenda-files '("todo.org")
-        org-agenda-start-on-weekday nil
+        org-agenda-start-on-weekday 1
         org-agenda-todo-ignore-scheduled 'all)
 
   (with-eval-after-load 'org-agenda

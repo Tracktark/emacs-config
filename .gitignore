@@ -6,7 +6,6 @@
 !custom-settings.el
 !early-init.el
 !init.el
-!bookmarks
 !.gitignore
 !/extensions/
 !/snippets/

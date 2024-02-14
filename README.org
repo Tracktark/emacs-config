@@ -735,10 +735,29 @@ A wrapper around emacs' undo system with redo.
   :config
   (setq org-reveal-root "file:///usr/local/src/reveal.js"))
 #+end_src
+* Popper
 #+begin_src elisp
+(use-package popper
+  :demand t
   :general
+  (leader-def
+    "k" '(popper-toggle :wk "Toggle popup")
+    "K" '(popper-cycle :wk "Cycle popups"))
   :config
+  (setq popper-reference-buffers '(compilation-mode
+                                   helpful-mode
+                                   eshell-mode
+                                   vterm-mode
+                                   inferior-python-mode
+                                   "\\*Python\\*"
+                                   "\\*vterminal"
+                                   "\\*org-roam\\*"
+                                   "\\*rg\\*")
 
+        popper-group-function 'popper-group-by-perspective
+        popper-mode-line nil)
+  (popper-mode 1)
+  (popper-echo-mode 1))
 #+end_src
 * Flycheck
 #+begin_src elisp

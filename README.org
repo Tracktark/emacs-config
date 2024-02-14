@@ -566,6 +566,7 @@ A wrapper around emacs' undo system with redo.
         org-agenda-files '("todo.org")
         org-agenda-start-on-weekday 1
         org-agenda-todo-ignore-scheduled 'all)
+  (add-hook 'server-after-make-frame-hook 'rz/agenda)
 
   (with-eval-after-load 'org-agenda
     (setq org-agenda-sorting-strategy (cons '(todo priority-down deadline-up) org-agenda-sorting-strategy))))
@@ -585,7 +586,7 @@ A wrapper around emacs' undo system with redo.
   :general
   (leader-def
     "C" '(org-capture :wk "Org Capture")
-    "a" '((lambda (&optional arg) (interactive "P")(org-agenda arg "n"))  :wk "Agenda"))
+    "a" `(,(defun rz/agenda (&optional arg) (interactive "P")(org-agenda arg "n"))  :wk "Agenda"))
   (:keymaps 'org-mode-map
    :states '(normal insert)
    "TAB" 'org-cycle

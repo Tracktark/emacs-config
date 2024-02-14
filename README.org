@@ -709,7 +709,11 @@ A wrapper around emacs' undo system with redo.
 (use-package org-roam-ui
   :after org-roam)
 #+end_src
+** Org Anki
 #+begin_src elisp
+(use-package org-anki
+  :commands (org-anki-sync-entry))
+#+end_src
   :demand t
   :config
 #+end_src

@@ -1121,10 +1121,12 @@ Cython
 * Magit
 #+begin_src elisp
 (use-package magit
-  :general (leader-def
-    "g" '(magit-status :wk "Magit"))
+  :general
+  (leader-def
+   "g" '(magit-status :wk "Magit"))
   :config
-  (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1))
+  (setq magit-display-buffer-function 'magit-display-buffer-fullframe-status-v1)
+  (add-to-list 'display-buffer-alist '("magit-diff" . (display-buffer-at-bottom))))
 #+end_src
 * Yasnippet
 #+begin_src elisp

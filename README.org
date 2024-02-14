@@ -100,10 +100,6 @@ Disable cursor blinking
 #+begin_src elisp
 (blink-cursor-mode 0)
 #+end_src
-Font
-#+begin_src elisp
-(set-face-attribute 'default nil :font "FiraCode Nerd Font" :height 140 :weight 'normal)
-#+end_src
 Enable savehist mode to save minibuffer history
 #+begin_src elisp
 (savehist-mode 1)

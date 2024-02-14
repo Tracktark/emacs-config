@@ -1037,6 +1037,12 @@ Cython
 (use-package fennel-mode
   :mode "\\.fnl\\'")
 #+end_src
+** Java
+#+begin_src elisp
+(use-package lsp-java
+  :demand t
+  :hook (java-mode . lsp-deferred))
+#+end_src
 * Projectile
 #+begin_src elisp
 (use-package projectile

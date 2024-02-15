@@ -5,7 +5,6 @@
 !README.org
 !custom-settings.el
 !early-init.el
-!init.el
 !tangle.sh
 !.gitignore
 !/extensions/

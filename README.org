@@ -190,6 +190,7 @@ Display buffer base
 #+end_src
 ** Compilation
 #+begin_src elisp
+(setq compile-command "make -j8 -k ")
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
 (add-to-list 'display-buffer-alist

@@ -193,8 +193,6 @@ Display buffer base
 (setq compile-command "make -j8 -k ")
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 (setq compilation-scroll-output 'first-error)
-(add-to-list 'display-buffer-alist
-             '((major-mode . compilation-mode) (display-buffer-no-window)))
 (defun rz/open-compilation-if-failed (buffer string)
   "Display a compilation buffer if compilation didn't succeed."
   (when (or (> compilation-num-errors-found 0)
@@ -745,7 +743,7 @@ A wrapper around emacs' undo system with redo.
     "k" '(popper-toggle :wk "Toggle popup")
     "K" '(popper-cycle :wk "Cycle popups"))
   :config
-  (setq popper-reference-buffers '(compilation-mode
+  (setq popper-reference-buffers '((compilation-mode . hide)
                                    helpful-mode
                                    eshell-mode
                                    vterm-mode

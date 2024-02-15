@@ -496,7 +496,6 @@ A wrapper around emacs' undo system with redo.
   (:keymaps 'vertico-map
             "RET" 'vertico-directory-enter
             "DEL" 'vertico-directory-delete-char))
-
 #+end_src
 * All The Icons
 #+begin_src elisp
@@ -638,7 +637,6 @@ A wrapper around emacs' undo system with redo.
   :demand t
   :config
   (evil-org-agenda-set-keys))
-
 #+end_src
 ** Org Tempo
 #+begin_src elisp

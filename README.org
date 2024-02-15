@@ -825,17 +825,19 @@ Code completion framework. I don't really like automatic code completion, so I'l
   :hook ((lsp-mode . lsp-enable-which-key-integration)
          (lsp-mode . (lambda () (setq-local evil-lookup-func 'lsp-describe-thing-at-point))))
   :commands (lsp lsp-deferred)
-  :general (leader-def
-    "c a" '(lsp-execute-code-action :wk "Code Action")
-    "c l" '(:keymap lsp-command-map :wk "lsp"))
-    (:states 'insert
-     :keymaps 'lsp-mode-map
-     "M-j" 'lsp-signature-next
-     "M-k" 'lsp-signature-previous)
+  :general
+  (leader-def
+   "c a" '(lsp-execute-code-action :wk "Code Action")
+   "c l" '(:keymap lsp-command-map :wk "lsp"))
+  (:states 'insert
+   :keymaps 'lsp-mode-map
+   "M-j" 'lsp-signature-next
+   "M-k" 'lsp-signature-previous)
   :config
   (setq lsp-headerline-breadcrumb-enable nil
         lsp-signature-doc-lines 1
-        lsp-lens-enable nil))
+        lsp-lens-enable nil)
+  (add-to-list 'display-buffer-alist '("\*lsp-help\*" . (display-buffer-at-bottom))))
 
 (use-package lsp-ui
   :config

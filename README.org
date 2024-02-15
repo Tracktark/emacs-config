@@ -498,31 +498,6 @@ A wrapper around emacs' undo system with redo.
             "DEL" 'vertico-directory-delete-char))
 
 #+end_src
-** Mini Frame
-#+begin_src elisp :tangle no
-(use-package mini-frame
-  :config
-  (defun rz/mini-frame-refresh-colors ()
-    (setq mini-frame-show-parameters `((top . 1.0)
-                                       (left . 0.5)
-                                       (width . 1.0)
-                                       (height . 10)
-                                       (left-fringe . 12)
-                                       (right-fringe . 12)
-                                       (child-frame-border-width . 0)
-                                       (internal-border-width . 0)
-                                       (foreground-color . ,eleface-foreground-color)
-                                       (background-color . ,eleface-subtle-color)))
-    (set-face 'vertico-current 'eleface-default))
-  (rz/mini-frame-refresh-colors)
-  (add-hook 'elegance-theme-change-hook 'rz/mini-frame-refresh-colors)
-  (setq mini-frame-ignore-commands '("edebug-eval-expression"
-                                     debugger-eval-expresson
-                                     pp-eval-expression
-                                     evil-ex debugger-eval-expression)
-        mini-frame-resize 'grow-only)
-  (mini-frame-mode 1))
-#+end_src
 * All The Icons
 #+begin_src elisp
 (use-package all-the-icons)

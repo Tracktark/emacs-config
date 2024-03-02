@@ -1,0 +1,12 @@
+(add-to-list 'load-path (expand-file-name "config/" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "extensions/" user-emacs-directory))
+(require 'rz-straight)
+(require 'rz-general)
+(require 'rz-emacs)
+(require 'rz-evil)
+(require 'rz-keybinds)
+(require 'rz-visual)
+(require 'rz-util)
+(require 'rz-org)
+(require 'rz-lang)
+

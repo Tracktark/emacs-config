@@ -9,3 +9,5 @@
 !.gitignore
 !/extensions/
 !/snippets/
+!/config/
+!/init.el

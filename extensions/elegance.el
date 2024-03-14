@@ -231,7 +231,8 @@ ARGS are passed to `set-face-attribute'."
    (set-face 'org-code                               'eleface-popout)
    (set-face 'org-verse                               'eleface-faded)
    (set-face 'org-warning                            'eleface-popout
-             :foreground (if (eq elegance-current-theme 'light) "#df8e1d" "#eed49f")))
+             :foreground (if (eq elegance-current-theme 'light) "#df8e1d" "#eed49f"))
+   (set-face-attribute 'org-hide nil :foreground eleface-background-color))
 
 
  (with-eval-after-load 'org-agenda

@@ -55,8 +55,8 @@
                     (let ((beg-of-whitespace (save-excursion
                                                 (skip-chars-backward " \t" (point-at-bol))
                                                 (point))))
-                       (if (equal (point) beg-of-whitespace
-                            (call-interactively 'backward-kill-word))
-                          (delete-region beg-of-whitespace (point))))))
+                       (if (equal (point) beg-of-whitespace)
+                          (call-interactively 'backward-kill-word)
+                         (delete-region beg-of-whitespace (point))))))
 
 (provide 'rz-keybinds)

@@ -2,7 +2,7 @@
 
 (defun rz/org-agenda-init ()
   (setq org-agenda-window-setup 'current-window
-        org-agenda-files '("todo.org")
+        org-agenda-files '(".")
         org-agenda-start-on-weekday 1
         org-agenda-todo-ignore-scheduled 'all)
   (add-hook 'server-after-make-frame-hook 'rz/agenda)

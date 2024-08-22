@@ -2,10 +2,12 @@
 
 (defun rz/org-agenda-init ()
   (setq org-agenda-window-setup 'current-window
-        org-agenda-files '(".")
+        org-agenda-files '("todo.org")
         org-agenda-start-on-weekday 1
         org-agenda-todo-ignore-scheduled 'all)
-  (add-hook 'server-after-make-frame-hook 'rz/agenda)
+  (setq initial-buffer-choice (lambda ()
+                                (rz/agenda)
+                                (get-buffer "*Org Agenda*")))
 
   (with-eval-after-load 'org-agenda
     (setq org-agenda-sorting-strategy (cons '(todo priority-down deadline-up) org-agenda-sorting-strategy))))
@@ -22,6 +24,7 @@
          (org-mode . rz/org-center-title)
          (org-mode . rz/org-hide-properties)
          (org-after-todo-state-change . rz/archive-on-done))
+  :demand t
   :general
   (leader-def
     "C" '(org-capture :wk "Org Capture")

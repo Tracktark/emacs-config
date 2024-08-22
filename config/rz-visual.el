@@ -99,8 +99,8 @@
   :straight nil
   :hook (prog-mode . hl-todo-mode)
   :config
-  (setq hl-todo-keyword-faces '(("TODO" warning bold)
-                                ("NOTE" success bold))))
+  (setq hl-todo-keyword-faces '(("TODO" . '(warning bold))
+                                ("NOTE" . '(success bold)))))
 (use-package all-the-icons)
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
@@ -120,7 +120,7 @@
     "k" '(popper-toggle :wk "Toggle popup")
     "K" '(popper-cycle :wk "Cycle popups"))
   :config
-  (setq popper-reference-buffers '((compilation-mode . hide)
+  (setq popper-reference-buffers '(compilation-mode
                                    helpful-mode
                                    eshell-mode
                                    vterm-mode
@@ -129,7 +129,7 @@
                                    "\\*vterminal"
                                    "\\*org-roam\\*"
                                    "\\*rg\\*"
-                                   "\\*lsp-help\\*")
+                                   "\\*eldoc")
 
         popper-group-function 'popper-group-by-perspective
         popper-mode-line nil)

@@ -143,7 +143,7 @@
 
         ("execute" ,(regexp-opt mcf-execute-subcommand-list 'words) nil nil (0 font-lock-keyword-face))
 
-        ("@[aeprs]" . 'font-lock-variable-use-face)
+        ("@[aeprsn]" . 'font-lock-variable-use-face)
         ("\\sw+\\s-*=" . font-lock-type-face)
         ("^\\$" "\\$(\\sw+)" nil nil (0 'font-lock-variable-use-face))
         ("^[^$]" "\\$(\\sw+)" nil nil (0 'error))

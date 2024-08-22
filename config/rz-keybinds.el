@@ -3,6 +3,28 @@
 
 (defvar-local rz/compile-func 'recompile "Function to run when compiling.")
 (defun rz/compile () (interactive) (funcall rz/compile-func))
+
+(defun rz/gf2-send-commands (&rest commands)
+  (dolist (command commands)
+    (write-region command nil "/run/user/1000/gf2.pipe")))
+(defun rz/gf2-move-to-current-pos (&optional run)
+  (rz/gf2-send-commands
+   (format "f %s" buffer-file-name)
+   (format "l %d" (line-number-at-pos)))
+  (when run
+    (rz/gf2-send-commands
+     (format "c tbreak %s:%d" buffer-file-name (line-number-at-pos)))))
+     ;; (format "c continue" (line-number-at-pos)))))
+
+(defun rz/gf2-open (&optional run)
+  (interactive)
+  (let ((default-directory (or (projectile-project-root) default-directory)))
+    (start-process "gf2" nil "gf2")
+    (run-with-timer 0.2 nil 'rz/gf2-move-to-current-pos run)))
+(defun rz/gf2-open-and-run ()
+  (interactive)
+  (rz/gf2-open t))
+
 (leader-def
   ";" '(pp-eval-expression :wk "Eval Elisp")
   ":" '(execute-extended-command :wk "M-x")
@@ -14,6 +36,8 @@
   "c" '(:ignore t :wk "code")
   "c c" '(rz/compile :wk "Recompile")
   "c C" '(compile :wk "Compile")
+  "c d" '(rz/gf2-open :wk "Run gf2")
+  "c D" '(rz/gf2-open-and-run :wk "Run gf2 and break at current line")
 
   "f" '(:ignore t :wk "file")
   "f s" '(save-buffer :wk "Save file")
@@ -33,13 +57,18 @@
   "b d" '(kill-current-buffer :wk "Kill buffer")
   "b b" '(switch-to-buffer :wk "Switch buffers")
   "b r" `(,(defun rz/revert-buffer () (interactive) (revert-buffer nil (not (buffer-modified-p)))) :wk "Revert buffer")
+  "b i" '(ibuffer :wk "ibuffer")
 
   "n" '(:ignore t :wk "narrow")
   "n w" '(widen :wk "Widen")
   "n f" '(narrow-to-defun :wk "Function")
   "n r" '(narrow-to-region :wk "Region")
 
-  "t" `(,(defun rz/open-todo-file () (interactive) (find-file (expand-file-name "~/org/todo.org"))) :wk "Open Todo"))
+  "t" `(,(defun rz/open-todo-file () (interactive) (find-file (expand-file-name "~/org/todo.org"))) :wk "Open Todo")
+
+  "i" '(imenu :wk "Imenu")
+
+  "s" '(:ignore t :wk "search"))
 
 (general-def
   :keymaps 'override
@@ -48,6 +77,12 @@
   :states '(normal visual insert)
   "C-=" 'text-scale-increase
   "C--" 'text-scale-decrease)
+(general-def
+  :states '(normal visual)
+  "k" 'evil-previous-visual-line
+  "j" 'evil-next-visual-line
+  "g j" 'evil-next-line
+  "g k" 'evil-previous-line)
 (general-def
   :states 'insert
   "C-<backspace>" (defun rz/greedy-delete ()

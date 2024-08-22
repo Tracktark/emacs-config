@@ -53,17 +53,23 @@
 
 (add-to-list 'display-buffer-alist
              '("\\*eshell\\*" . (display-buffer-at-bottom)))
-(setq display-buffer-base-action '(display-buffer-same-window))
+(setq display-buffer-base-action '((display-buffer-same-window display-buffer-use-some-window)))
 
 (use-package compile
   :config
   (setq compile-command "make -j8 -k "
         compilation-scroll-output 'first-error)
+  (defun rz/kill-compilation-buffer ()
+    (unless (equal (buffer-name) "*compilation*")
+      (popper-close-latest))
+    (remove-hook 'post-command-hook 'rz/kill-compilation-buffer))
   (defun rz/open-compilation-if-failed (buffer string)
       "Display a compilation buffer if compilation didn't succeed."
-      (when (or (> compilation-num-errors-found 0
-                  (> compilation-num-warnings-found 0)))
-          (pop-to-buffer buffer)))
+      (when (= compilation-num-errors-found compilation-num-warnings-found 0)
+        (previous-line)
+        (recenter -1)
+        (other-window 1)
+        (add-hook 'post-command-hook 'rz/kill-compilation-buffer)))
   (add-hook 'compilation-finish-functions 'rz/open-compilation-if-failed)
   (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
 
@@ -95,5 +101,10 @@
                                   "<mouse-8>" 'dired-up-directory)))
   (with-eval-after-load 'dired-aux
     (add-to-list 'dired-compress-file-alist '("\\.zip\\'" . "zip %o %i"))))
+
+(add-to-list 'exec-path "/home/moss/.local/bin")
+
+(with-eval-after-load 'eshell
+  (add-hook 'eshell-exit-hook 'delete-window))
 
 (provide 'rz-emacs)

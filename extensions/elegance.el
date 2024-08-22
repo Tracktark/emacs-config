@@ -261,7 +261,13 @@ ARGS are passed to `set-face-attribute'."
    (set-face 'tree-sitter-hl-face:property 'eleface-default)
    (set-face 'tree-sitter-hl-face:number 'eleface-default)
    (set-face 'tree-sitter-hl-face:type.builtin 'eleface-salient)
-   (set-face 'tree-sitter-hl-face:type 'eleface-salient)))
+   (set-face 'tree-sitter-hl-face:type 'eleface-salient))
+
+ (with-eval-after-load 'eglot
+   (set-face 'eglot-highlight-symbol-face 'eleface-subtle))
+
+ (with-eval-after-load 'which-func
+   (set-face 'which-func 'eleface-subtle)))
 
 
 (defun elegance-set-theme (theme)

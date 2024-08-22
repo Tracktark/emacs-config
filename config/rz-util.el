@@ -3,7 +3,6 @@
 (use-package rg
   :general
   (leader-def
-    "s" '(:ignore t :wk "search")
     "s s" '(rg-literal :wk "Literal")
     "s r" '(rg :wk "Regex")
     "s t" '(rz/rg-todo-project :wk "Find all todos")
@@ -53,19 +52,21 @@
    :states 'normal
     "q" 'quit-window))
 
-(use-package flycheck
+(use-package flymake
   :demand t
-  :config
-  (global-flycheck-mode)
   :general
   (leader-def
-   "c x" '(flycheck-list-errors :wk "Show error list"))
+   "c x" '(flymake-show-buffer-diagnostics :wk "Show buffer errors")
+   "c X" '(flymake-show-project-diagnostics :wk "Show project errors"))
   (:states '(normal visual)
-   "] e" '(flycheck-next-error :wk "Go to next error")
-   "[ e" '(flycheck-previous-error :wk "Go to previous error"))
-  (:keymaps 'flycheck-error-list-mode-map
-   :states 'normal
-   "q" 'quit-window))
+   "] e" '(flymake-goto-next-error :wk "Go to next error")
+   "[ e" '(flymake-goto-prev-error :wk "Go to previous error")))
+(use-package flymake-cursor
+  :after flymake
+  :demand t
+  :config
+  (setq flymake-cursor-auto-enable t
+        flymake-cursor-error-display-delay 0.3))
 
 (use-package company
   :general
@@ -104,28 +105,24 @@
   :config
   (setq parinfer-rust-troublesome-modes (delete 'electric-pair-mode parinfer-rust-troublesome-modes)))
 
-(use-package lsp-mode
-  :hook ((lsp-mode . lsp-enable-which-key-integration)
-         (lsp-mode . (lambda () (setq-local evil-lookup-func 'lsp-describe-thing-at-point))))
-  :commands (lsp lsp-deferred)
+(use-package eglot
+  :commands (eglot)
   :general
   (leader-def
-   "c a" '(lsp-execute-code-action :wk "Code Action")
-   "c l" '(:keymap lsp-command-map :wk "lsp"))
-  (:states 'insert
-   :keymaps 'lsp-mode-map
-   "M-j" 'lsp-signature-next
-   "M-k" 'lsp-signature-previous)
+   "c a" '(eglot-code-actions :wk "Code Action")
+   "c r" '(eglot-rename :wk "Rename")
+   "c e" '(eglot :wk "Eglot")
+   "c f" '(eglot-format :wk "Format"))
   :config
-  (setq lsp-headerline-breadcrumb-enable nil
-        lsp-signature-doc-lines 1
-        lsp-lens-enable nil)
-  (add-to-list 'display-buffer-alist '("\*lsp-help\*" . (display-buffer-at-bottom))))
+  (add-to-list 'display-buffer-alist '("\\*eldoc" . (display-buffer-at-bottom)))
+  (add-to-list 'eglot-ignored-server-capabilities :inlayHintProvider)
+  (setq eldoc-echo-area-use-multiline-p nil
+        eldoc-display-functions '(eldoc-display-in-buffer)
+        eldoc-idle-delay 0))
 
-(use-package lsp-ui
-  :config
-  (setq lsp-diagnostics-attributes '()
-        lsp-ui-doc-enable nil))
+(use-package markdown-mode
+  :demand t
+  :after eglot)
 
 (use-package projectile
   :general

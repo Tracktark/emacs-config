@@ -27,9 +27,11 @@
   (org-babel-do-load-languages
    'org-babel-load-languages
    (cons '(python . t) org-babel-load-languages))
-  (use-package pet
+  (use-package pyvenv
+    :commands (pyvenv-activate pyvenv-workon)
     :config
-    (add-hook 'python-mode-hook 'pet-mode -10)))
+    (defun pyvenv-workon-home ()
+      (expand-file-name "~/.local/share/venvs"))))
 
 (defun rz/setup-c-mode ()
   (c-set-offset 'innamespace 0)
